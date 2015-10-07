@@ -3,50 +3,62 @@ var taskManagerModule = angular.module('taskManagerApp', ['ngAnimate']);
 taskManagerModule.controller('taskManagerController', function ($scope,$http) {
 	
 	var urlBase="";
-	$scope.toggle=true;
 	$scope.selection = [];
-	$scope.statuses=['ACTIVE','COMPLETED'];
-	$scope.priorities=['HIGH','LOW','MEDIUM'];
+	$scope.enumArte=['Pintura','Escultura','Arquitectura','Arte Efímero','Orfebrería']
+	$scope.enumGenero=['Arte','Cultura','Economía','Política','Otros']
+	$scope.enumTipoDocumento=['Poder','Contrato','Inventario','Testamento','Carta personal','Carta pública','Carta oficial','Otro']
+	$scope.enumTranscrito=['Si','No','Parcialmente']
 	$http.defaults.headers.post["Content-Type"] = "application/json";
 
-    function findAllTasks() {
-        //get all tasks and display initially
-        $http.get(urlBase + '/tasks/search/findByTaskArchived?archivedfalse=0').
+    function findAllArchivos() {
+        //get all files and display initially
+        $http.get(urlBase + '/archivos/').
             success(function (data) {
                 if (data._embedded != undefined) {
-                    $scope.tasks = data._embedded.tasks;
+                    $scope.archivos = data._embedded.archivos;
                 } else {
-                    $scope.tasks = [];
+                    $scope.archivos = [];
                 }
-                for (var i = 0; i < $scope.tasks.length; i++) {
-                    if ($scope.tasks[i].taskStatus == 'COMPLETED') {
-                        $scope.selection.push($scope.tasks[i].taskId);
-                    }
-                }
-                $scope.taskName="";
-                $scope.taskDesc="";
-                $scope.taskPriority="";
-                $scope.taskStatus="";
-                $scope.toggle='!toggle';
+                $scope.accion="";
+                $scope.arte="";
+                $scope.destinoObra="";
+                $scope.fecha="";
+                $scope.fechaInventario="";
+                $scope.fechaLimite="";
+                $scope.firmante="";
+                $scope.genero="";
+                $scope.idioma="";
+                $scope.nombre="";
+                $scope.notario="";
+                $scope.numReferencia="";
+                $scope.observaciones="";
+                $scope.otrasPersonas="";
+                $scope.pagina="";
+                $scope.receptor="";
+                $scope.receptorAusente="";
+                $scope.referencia="";
+                $scope.testigos="";
+                $scope.tipoDocumento="";
+                $scope.transcrito="";
+                
             });
     }
 
-    findAllTasks();
+    findAllArchivos();
 
 	//add a new task
 	$scope.addTask = function addTask() {
-		if($scope.taskName=="" || $scope.taskDesc=="" || $scope.taskPriority == "" || $scope.taskStatus == ""){
+		if($scope.fecha=="" || $	scope.nombre=="" || $scope.numReferencia == ""){
 			alert("Insufficient Data! Please provide values for task name, description, priortiy and status");
 		}
 		else{
-		 $http.post(urlBase + '/tasks', {
-             taskName: $scope.taskName,
-             taskDescription: $scope.taskDesc,
-             taskPriority: $scope.taskPriority,
-             taskStatus: $scope.taskStatus
+		 $http.post(urlBase + '/archivos', {
+             name: $scope.name,
+             fecha: $scope.numReferencia,
+             numReferencia: $scope.numReferencia
          }).
 		  success(function(data, status, headers) {
-			 alert("Task added");
+			 alert("Archivo añadido");
              var newTaskUri = headers()["location"];
              console.log("Might be good to GET " + newTaskUri + " and append the task.");
              // Refetching EVERYTHING every time can get expensive over time
